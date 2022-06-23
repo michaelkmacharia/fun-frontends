@@ -1,0 +1,146 @@
+*
+{
+	box-sizing : border-box ;
+}
+
+body
+{
+	background : #2E36A2 url( "./../background.png" ) no-repeat center center/cover ;
+	color : #FFF ;
+	font-family : Arial , Helvetica , sans-serif ;
+	min-height : 100vh ;
+	overflow : hidden ;
+	display : flex ;
+	flex-direction : column ;
+	align-items : center ;
+	margin : 0 ;
+}
+
+.master-container
+{
+	display : flex ;
+	align-items : center ;
+	justify-content : center ;
+	height : 300px ;
+	width : 300px ;
+	margin : auto ;
+	position : relative ;
+	transform : scale( 1 ) ;
+}
+
+.master-container.grow
+{
+	animation : grow 5s linear forwards ;
+}
+
+.master-container.shrink
+{
+	animation : shrink 5s linear forwards ;
+}
+
+.circle
+{
+	background-color : #010F1C ;
+	height : 100% ;
+	width : 100% ;
+	position : absolute ;
+	top : 0 ;
+	left : 0 ;
+	z-index : -1 ;
+	border-radius : 50% ;
+}
+
+.informational-text
+{
+	font-weight : 900 ;
+	font-size : 1.5rem ;
+}
+
+.pointer-container
+{
+	position : absolute ;
+	top : -40px ;
+	left : 140px ;
+	width : 20px ;
+	height : 190px ;
+	transform-origin : bottom center ;
+}
+
+.pointer-container.rotate
+{
+	animation : rotate 15s linear forwards infinite ;
+}
+
+.pointer
+{
+	background-color : #FFF ;
+	border-radius : 50% ;
+	height : 20px ;
+	width : 20px ;
+	display : block ;
+}
+
+.gradient-circle
+{
+	background : conic-gradient(
+		#4955FD 0% ,
+		#4955FD 33.33% ,
+		#FFF 33.33% ,
+		#FFF 66.66% ,
+		#2E36A2 66.66% ,
+		#2E36A2 99.99%
+	) ;
+	height : 320px ;
+	width : 320px ;
+	position : absolute ;
+	top : -10px ;
+	left : -10px ;
+	z-index : -2 ;
+	border-radius : 50% ;
+}
+
+.animation-toggler
+{
+	cursor : pointer ;
+	background-color : #FFF ;
+	color : #000 ;
+	margin-bottom : 1rem ;
+	padding : 0.5rem ;
+	border-radius : 1rem ;
+}
+
+@keyframes grow
+{
+	from
+	{
+		transform : scale( 1 ) ;
+	}
+	to
+	{
+		transform : scale( 1.33 ) ;
+	}
+}
+
+@keyframes shrink
+{
+	from
+	{
+		transform : scale( 1.33 ) ;
+	}
+	to
+	{
+		transform : scale( 1 ) ;
+	}
+}
+
+@keyframes rotate
+{
+	from
+	{
+		transform : rotate( 0deg ) ;
+	}
+	to
+	{
+		transform : rotate( 360deg ) ;
+	}
+}
