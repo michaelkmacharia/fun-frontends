@@ -2,122 +2,114 @@
 
 `use strict` ;
 
-const game = document . querySelector ( `#game-container` ) ;
+const projects = [ `hangman-game` , `meditation-app` , `typing-game` ] ;
 
-const guess = document . querySelector ( `#guess` ) ;
+const slides = document . querySelector ( `#slides-container` ) ;
 
-const message = document . querySelector ( `#message` ) ;
+let animation_ID ;
 
-const play = document . querySelector ( `#play` ) ;
+let current_index = 0 ;
 
-const popup = document . querySelector ( `#popup-container` ) ;
+let current_translate = 0 ;
 
-const right_letters = new Array () ;
+let dragging = false ;
 
-const score = document . querySelector ( `#score` ) ;
+let previous_translate = 0 ;
 
-const time = document . querySelector ( `#time` ) ;
+let start_position = 0 ;
 
-const word_ = document . querySelector ( `#word` ) ;
-
-let countdown_interval ;
-
-let countdown_time = 7 ;
-
-let fillable = true ;
-
-let score_count = 0 ;
-
-let total_time = 0 ;
-
-let word = words [ Math . floor ( Math . random () * words . length ) ] ;
-
-const click = ( () =>
+const animation = ( () =>
 	{
-		clearInterval ( countdown_interval ) ;
-		fillable = true ;
-		right_letters . splice ( 0 ) ;
-		word = words [ Math . floor ( Math . random () * words . length ) ] ;
-		display () ;
-		message . innerText = `` ;
-		popup . style . display = `none` ;
-		countdown_time = ( countdown_time === 0 ) ? ( 7 ) : ( countdown_time ) ;
-		countdown_interval = setInterval ( countdown , 1000 ) ;
-		return ;
-	}
-) ;
-
-const countdown = ( () =>
-	{
-		total_time ++ ;
-		countdown_time -- ;
-		time . innerText = countdown_time ;
-		if ( countdown_time === 0 )
-		{
-			clearInterval ( countdown_interval ) ;
-			fillable = false ;
-			message . innerText = `Game Over!\n\nYour score: ${ score_count } word${ ( score_count === 1 ) ? ( `` ) : ( `s` ) } in ${ total_time } seconds.` ;
-			popup . style . display = `flex` ;
-			total_time = 0 ;
-			score_count = 0 ;
-			score . innerText = score_count ;
-			return ;
-		}
+		slides . style . transform = `translateX(${ current_translate }px)` ;
+		( dragging ) ? ( requestAnimationFrame ( animation ) ) : ( `` ) ;
 		return ;
 	}
 ) ;
 
 const display = ( () =>
 	{
-		word_ . innerText = word ;
-		guess . innerHTML = `${ word . split ( `` ) . map ( ( letter ) =>
+		projects . forEach ( ( project ) =>
 			{
-				return ( `<span class="letter">${ right_letters . includes ( letter ) ? letter : `` }</span>` ) ;
-			}
-		) . join ( `` ) }` ;
-		const inner_word = guess . innerText . replace ( /[ \n]/g , `` ) ;
-		if ( inner_word === word )
-		{
-			countdown_time ++ ;
-			time . innerText = countdown_time ;
-			score_count ++ ;
-			score . innerText = score_count ;
-			click () ;
-			return ;
-		}
-		return ;
-	}
-) ;
-
-const keydown = ( ( event ) =>
-	{
-		if ( fillable )
-		{
-			if ( event . keyCode == 32 || ( event . keyCode >= 48 && event . keyCode <= 90 ) || event . keyCode == 173 || event . keyCode == 188 || event . keyCode == 190 || event . keyCode == 191 || event . keyCode == 222 )
-			{
-				const letter = event . key ;
-				if ( word . includes ( letter ) )
-				{
-					if ( ! right_letters . includes ( letter ) )
-					{
-						right_letters . push ( letter ) ;
-						display () ;
-						return ;
-					}
-					return ;
-				}
+				slides . innerHTML += `<div class="slide" id="slide"><a href="./${ project }/index.html" class="link" id="link"><img src="./storage/screenshots/${ project }.png" class="screenshot" id="screenshot" /></a></div>` ;
 				return ;
 			}
+		) ;
+		slides . querySelectorAll ( `#slide` ) . forEach ( ( slide , slide_index ) =>
+			{
+				slide . querySelector ( `#link` ) . addEventListener ( `dragstart` , prevent ) ;
+				slide . querySelector ( `#screenshot` ) . addEventListener ( `dragstart` , prevent ) ;
+				slide . addEventListener ( `mousedown` , start ( slide_index ) ) ;
+				slide . addEventListener ( `mousemove` , move ) ;
+				slide . addEventListener ( `mouseup` , end ) ;
+				slide . addEventListener ( `mouseleave` , end ) ;
+				slide . addEventListener ( `touchstart` , start ( slide_index ) ) ;
+				slide . addEventListener ( `touchmove` , move ) ;
+				slide . addEventListener ( `touchend` , end ) ;
+				slide . addEventListener ( `touchleave` , end ) ;
+				return ;
+			}
+		) ;
+		return ;
+	}
+) ;
+
+const end = ( () =>
+	{
+		cancelAnimationFrame ( animation_ID ) ;
+		dragging = false ;
+		let translation = current_translate - previous_translate ;
+		( ( translation < - 100 ) && ( current_index < ( ( projects . length ) - 1 ) ) ) ? ( current_index ++ ) : ( `` ) ;
+		( ( translation > 100 ) && ( current_index > 0 ) ) ? ( current_index -- ) : ( `` ) ;
+		position () ;
+		slides . classList . remove ( `grabbing` ) ;
+		return ;
+	}
+) ;
+
+const move = ( ( event ) =>
+	{
+		if ( dragging )
+		{
+			let current_position = ( event . type . includes ( `mouse` ) ) ? ( event . pageX ) : ( event . touches [ 0 ] . clientX ) ;
+			current_translate = ( previous_translate + current_position ) - start_position ;
 			return ;
 		}
 		return ;
 	}
 ) ;
 
-countdown_interval = setInterval ( countdown , 1000 ) ;
+const position = ( () =>
+	{
+		current_translate = current_index * ( - window . innerWidth ) ;
+		previous_translate = current_translate ;
+		slides . style . transform = `translateX(${ current_translate }px)` ;
+		return ;
+	}
+) ;
 
-play . addEventListener ( `click` , click ) ;
+const prevent = ( ( event ) =>
+	{
+		event . preventDefault () ;
+		event . stopPropagation () ;
+		return ;
+	}
+) ;
 
-window . addEventListener ( `keydown` , keydown ) ;
+const start = ( ( slide_index ) =>
+	{
+		return ( ( event ) =>
+			{
+				current_index = slide_index ;
+				start_position = ( event . type . includes ( `mouse` ) ) ? ( event . pageX ) : ( event . touches [ 0 ] . clientX ) ;
+				dragging = true ;
+				animation_ID = requestAnimationFrame ( animation ) ;
+				slides . classList . add ( `grabbing` ) ;
+				return ;
+			}
+		) ;
+	}
+) ;
+
+window . addEventListener ( `resize` , position ) ;
 
 display () ;
