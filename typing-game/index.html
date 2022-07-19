@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+<html lang="en" dir="ltr">
+
+	<head>
+
+		<meta charset="UTF-8" />
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<meta name="application-name" content="Fun Webapps" />
+		<meta name="author" content="Michael K Macharia" />
+		<meta name="description" content="Fun browser-based webapps." />
+		<meta name="keywords" content="Fun, Webapps, Fun Webapps." />
+		<meta name="pragma" content="cache" />
+		<meta name="robots" content="nofollow" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximun-scale=1.0, user-scalable=no" />
+
+		<title>Typing Game</title>
+
+		<link type="image/vnd.microsoft.icon" rel="icon" sizes="any" href="./../favicon.ico" />
+		<link type="text/css" rel="stylesheet" href="index.css" />
+
+		<script type="text/javascript" src="index.js" defer></script>
+		<script type="text/javascript" src="./../wordlist.js"></script>
+
+	</head>
+
+	<body>
+
+		<div class="game-container" id="game-container">
+
+			<div class="guess" id="guess"></div>
+
+			<div class="time-container">
+				Seconds left: <span class="time" id="time">7</span>
+			</div>
+
+			<div class="score-container">
+				Words written: <span class="score" id="score">0</span>
+			</div>
+
+			<div class="type-container">
+				Type the following word:
+				<h2 id="word"></h2>
+			</div>
+
+		</div>
+
+		<div class="popup-container" id="popup-container">
+			<div class="popup">
+
+				<h2 id="message"></h2>
+
+				<button id="play">Play Again</button>
+
+			</div>
+		</div>
+
+		<h2>Typing Game</h2>
+
+	</body>
+
+</html>
