@@ -1,6 +1,6 @@
-# fun-webapps
+# fun-frontends
 
-Fun browser-based webapps.
+Fun browser-based frontends.
 
 ## Usage
 
